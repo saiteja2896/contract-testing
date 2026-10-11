@@ -1,0 +1,146 @@
+{
+  "consumer": {
+    "name": "ProductConsumer"
+  },
+  "interactions": [
+    {
+      "description": "a request for product 1",
+      "providerStates": [
+        {
+          "name": "product 1 exists"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/products/1"
+      },
+      "response": {
+        "body": {
+          "id": 1,
+          "name": "Laptop",
+          "price": 999.99
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.price": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "decimal"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request for product 999",
+      "providerStates": [
+        {
+          "name": "product 999 does not exist"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/products/999"
+      },
+      "response": {
+        "status": 404
+      }
+    },
+    {
+      "description": "a request for all products",
+      "providerStates": [
+        {
+          "name": "products exist"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/products"
+      },
+      "response": {
+        "body": [
+          {
+            "id": 1,
+            "name": "Laptop",
+            "price": 999.99
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$[*].price": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "decimal"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.6.14"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "ProductService"
+  }
+}
